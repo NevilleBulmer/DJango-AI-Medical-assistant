@@ -1,0 +1,441 @@
+{% extends 'base.html' %}
+<!-- Load ststic files -->
+{% load staticfiles %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+    <div class="container body">
+        <div class="main_container">
+            <div class="col-md-3 left_col">
+                <div class="left_col scroll-view">
+                    <div class="navbar nav_title" style="border: 0;">
+                        <a href="index.html" class="site_title">
+                            <span>Specialist AI</span></a>
+                    </div>
+
+                    <div class="clearfix"></div>
+
+                    <!-- menu profile quick info -->
+                    <div class="profile clearfix">
+                        <div class="profile_info">
+                            <span></span>
+
+                            <!-- Implement account checks -->
+                            <!-- If the user is a patient -->
+                            {% if user.is_patient %}
+                                Patient {% include 'user_link.html' %}
+                            {% endif %}
+                            <!-- If the user is a doctor -->
+                            {% if user.is_doctor %}
+                                Dr {% include 'user_link.html' %}
+                            {% endif %}
+                            <!-- If the user is a nurse -->
+                            {% if user.is_nurse %}
+                                Nurse {% include 'user_link.html' %}
+                            {% endif %}
+                            <!-- If the user is a admin -->
+                            {% if user.is_superuser %}
+                                Admin {% include 'user_link.html' %}
+                            {% endif %}
+                            
+                        </div>
+                    </div>
+                    <!-- /menu profile quick info -->
+
+                    <br />
+
+                    <!-- sidebar menu -->
+                    <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+                        <div class="menu_section">
+                            <h3>General</h3>
+                            <ul class="nav side-menu">
+                                <!-- Include the navbar url -->
+                                {% include 'navbar.html' %}
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- /sidebar menu -->
+
+                    <!-- /menu footer buttons -->
+                    <div class="sidebar-footer hidden-small">
+                        <a data-toggle="tooltip" data-placement="top" title="Settings">
+                            <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                        </a>
+                        <a data-toggle="tooltip" data-placement="top" title="Profile">
+                            <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                        </a>
+                        <a data-toggle="tooltip" data-placement="top" title="Lock">
+                            <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+                        </a>
+                        <!-- Include the url for logging out -->
+                        <a data-toggle="tooltip" data-placement="top" title="Logout" href="{% url 'health:logout' %}">
+                            <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+                        </a>
+                    </div>
+                    <!-- /menu footer buttons -->
+                </div>
+            </div>
+
+            <!-- top navigation -->
+            <div class="top_nav">
+                <div class="nav_menu">
+                    
+                    <nav class="nav navbar-nav">
+                        <ul class=" navbar-right">
+                            <li class="nav-item dropdown open" style="padding-left: 15px;">
+                                <a href="javascript:;" class="user-profile dropdown-toggle" aria-haspopup="true"
+                                    id="navbarDropdown" data-toggle="dropdown" aria-expanded="false">
+                                    
+                                    
+                                </a>
+                                <div class="dropdown-menu dropdown-usermenu pull-right"
+                                    aria-labelledby="navbarDropdown">
+                                    <!-- Include the url for logging out -->
+                                    <a class="dropdown-item" href="{% url 'health:logout' %}">
+                                        <i class="fa fa-sign-out pull-right"></i>Log Out</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <!-- /top navigation -->
+
+            <!-- page content -->
+            <div class="right_col" role="main" style="min-height: 912px;">
+                {% if user.is_doctor %}
+
+                <div class="row">
+
+                    <div class="col-md-6 col-sm-6">
+                        <div class="x_panel">
+                            <div class="x_title">
+                                <h2>Details for<small> {{ requested_user.get_full_name }} </small></h2>
+                                <ul class="nav navbar-right panel_toolbox">
+                                    <li>
+                                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                                    </li>
+                                    <li>
+                                        <a class="close-link"><i class="fa fa-close"></i></a>
+                                    </li>
+                                </ul>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="x_content">
+                                
+                                    <p>
+                                        Please check the usaers details are correct
+                                    </p>
+
+                                    <div class="form-group">
+                                        <label class="">Users ID</label>
+                                        <input class="form-control" data-validate-length-range="6"
+                                            data-validate-words="2" name="full_name"
+                                            placeholder="{{ requested_user.id }}"  readonly />
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="">Users Full Name</label>
+                                        <input class="form-control" data-validate-length-range="6"
+                                            data-validate-words="2" name="full_name"
+                                            placeholder="{{ requested_user.get_full_name }}"  readonly />
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="">Users Email</label>
+                                        <input class="form-control" data-validate-length-range="6"
+                                            data-validate-words="2" name="full_name"
+                                            placeholder="{{ requested_user.email }}"  readonly />
+                                    </div>
+                                <form action="" method="post" enctype="multipart/form-data">
+
+                                    {% csrf_token %}
+                                    <input type="file" name="document">
+                                    <button type="submit">Upload</button>
+
+
+                                    <div class="form-group">
+                                        <label>Select Script</label>
+                                        <select class="form-control"
+                                        name="options">
+                                            <option value="image">Image classification</option>
+                                            <option value="audio">Audio classification</option>
+                                            <option value="text">Text classification</option>
+                                            <option value="video">Video classification</option>
+                                        </select>
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- DOCUMENT UPLOAD START -->
+                    <div class="col-md-6 col-sm-6">
+                        <div class="x_panel">
+                            <div class="x_title">
+                                <h2>Dropzone multiple file uploader</h2>
+                                <ul class="nav navbar-right panel_toolbox">
+                                    <li>
+                                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                                    </li>
+                                    <li>
+                                        <a class="close-link"><i class="fa fa-close"></i></a>
+                                    </li>
+                                </ul>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="x_content">
+                                <p>
+                                    Script will print out below
+                                </p>
+                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="10">
+Classification type: {{ script_selected }}
+Filename: {{ file_name }}
+Filesize: {{ file_size }}
+Ongoing: {{ running_inference }}
+Result from classification: {{ results_gained }}</textarea>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- DOCUMENT UPLOAD END -->
+                </div>
+                {% endif %}
+                <!-- End of doctor section -->
+
+                <!-- Start of patient section -->
+                {% if user.is_patient %}
+                <div class="row">
+                    <div class="col-md-12 col-sm-12">
+
+                        <!-- CHAT LIST START -->
+                        <div class="col-md-4 col-sm-4">
+                            <div class="x_panel">
+                                <div class="x_title">
+                                    <h2>Chats</h2>
+                                    <ul class="nav navbar-right panel_toolbox">
+                                        <li>
+                                            <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                                        </li>
+                                    </ul>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="x_content">
+                                    <div class="dashboard-widget-content">
+                                        {% if groups %}
+                                        {% for group in groups %}
+                                        <a href="{% url 'health:conversation' group.pk %}">
+                                            <div class="mail_list">
+                                                <div class="right">
+
+                                                    {% if group.latest_message %}
+                                                        <h3>{{ group.combined_names }} <small>{{ group.latest_message.date }}</small></h3>
+                                                        <p></p>  
+                                                    {% endif %}
+                                                    
+                                                        <p><em><strong>{{ group.name }}</strong></em></p>
+
+                                                    {% if group.has_unread %}
+                                                    <div class="left">
+                                                        <i class="fa fa-circle"></i> <i class="fa fa-edit"></i>
+                                                    </div>
+                                                    {% endif %}
+                                                    
+                                                    <div class="indent">
+                                                        {% if group.latest_message %}
+                                                            <span class="text-preview"><em>{% if group.latest_message.sender == user %}You: {% endif %}<p>{{ group.latest_message.preview_text }}</p></em></span>
+                                                        {% else %}
+                                                            <span class="text-preview"><em>No Messages</em></span>
+                                                        {% endif %}
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </a>
+                                        {% endfor %}
+                                    {% else %}
+                                        <h2 style="text-align: center">No messages.</h2>
+                                    {% endif %}
+                                    </div>
+                                </div>
+                                <button id="compose" class="btn btn-sm btn-success btn-block" data-toggle="modal" data-target="#send">COMPOSE</button>
+
+                                {% include 'error.html' %}
+                                
+                            </div>
+                        </div>
+                        <!-- CHATS LIST END -->
+
+                        <div class="row">
+
+                            <!-- SCHEDULE START -->
+                            <div class="col-md-6 col-sm-6">
+                                <div class="x_panel">
+                                    <div class="x_title">
+                                        <h2>Your<small> Schedule</small></h2>
+                                        <ul class="nav navbar-right panel_toolbox">
+                                            <li>
+                                                <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                                            </li>
+                                        </ul>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div class="x_content">
+                                        <div class="dashboard-widget-content">
+                                            {% include 'error.html' %}
+                                            {% if schedule_future %}
+                                                <table class="table table-bordered table-striped">
+                                                    <legend>Upcoming appointments for {% include 'user_link.html' %}</legend>
+                                                    {% include 'appointment_table.html' with schedule=schedule_future editable=False %}
+                                                </table>
+                                            {% else %}
+                                                <h2 class="text-center">No upcoming appointments.</h2>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- SHECULE END -->
+        
+                            <!-- PRESCRIPTIONS START -->
+                            <div class="col-md-6 col-sm-6">
+                                <div class="x_panel">
+                                    <div class="x_title">
+                                        <h2>Your<small> prescriptions</small></h2>
+                                        <ul class="nav navbar-right panel_toolbox">
+                                            <li>
+                                                <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                                            </li>
+                                        </ul>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div class="x_content">
+                                        <div class="dashboard-widget-content">
+                                            {% include 'error.html' %}
+                                            {% if user.active_patients %}
+                                                <div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="table-responsive">
+                                                    {% for user in user.active_patients %}
+                                                        {% if user.active_prescriptions %}
+                                                            <table class="table table-bordered table-striped">
+                                                                <legend>Prescriptions for {% include 'user_link.html' %}</legend>
+                                                                <thead>
+                                                                <tr>
+                                                                    <th>Dosage</th>
+                                                                    <th>Name</th>
+                                                                    <th>Directions</th>
+                                                                </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                {% for prescription in user.active_prescriptions %}
+                                                                    <tr>
+                                                                        <td>{{ prescription.dosage }}</td>
+                                                                        <td>{{ prescription.name }}</td>
+                                                                        <td>{{ prescription.directions }}</td>
+                                                                    </tr>
+                                                                {% endfor %}
+                                                                </tbody>
+                                                            </table>
+                                                        {% else %}
+                                                            <div class="text-center">
+                                                                <h2> No prescriptions for {% include 'user_link.html' %}</h2>
+                                                            </div>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </div>
+                                            {% else %}
+                                                <h2 class="text-center"> No active patients in hospital. </h2>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- PRESCRIPTIONS END -->
+
+                        <div class="x_panel">
+                            <div class="x_title">
+                                <h2>Current Patients<small>records</small></h2>
+                                <ul class="nav navbar-right panel_toolbox">
+                                    <li>
+                                        <a class="collapse-link">
+                                            <i class="fa fa-chevron-up"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="x_content">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="card-box table-responsive">
+                                            <table id="datatable-responsive"
+                                                class="table table-striped table-bordered dt-responsive nowrap"
+                                                cellspacing="0" width="100%">
+                                                <thead>
+                                                    <tr>
+                                                        <th>ID</th>
+                                                        <th>First Name</th>
+                                                        <th>Surame</th>
+                                                        <th>User Full Name</th>
+                                                        <th>D.O.B</th>
+                                                        <th>Sex</th>
+                                                        <th>Landline</th>
+                                                        <th>E-mail</th>
+                                                        <th>Diagnosed</th>
+                                                        <th>Data Available</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for patient in user.active_patients %}
+                                                    <tr>
+                                                        
+                                                        <td>{{ patient.pk }}</td>
+                                                        <td>{{ patient.first_name }}</td>
+                                                        <td>{{ patient.last_name }}</td>
+                                                        <td><a href="{% url 'health:medical_information' patient.pk %}">{{ patient.get_full_name }}</a></td>
+                                                        <td>{{ patient.date_of_birth.day}}/{{ patient.date_of_birth.month}}/{{ patient.date_of_birth.year}}</td>
+                                                        <td>{{ patient.medical_information.sex }}</td>
+                                                        <td>{{ patient.phone_number }}</td>
+                                                        <td>{{ patient.email }}</td>
+                                                        <td>YES</td>
+                                                        <td>YES</td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                <!-- End of patient section -->
+            </div>
+            <!-- /page content -->
+
+            <!-- footer content -->
+            <footer>
+                <div class="pull-right">
+                    Created by <a href="http://www.neville-bulmer.com/">Neville Bulmer</a> with the help of bootstrap
+                </div>
+                <div class="clearfix"></div>
+            </footer>
+            <!-- /footer content -->
+        </div>
+    </div>
+    
+{% endblock %}

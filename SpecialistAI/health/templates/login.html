@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+<!-- Load ststic files -->
+{% load staticfiles %}
+
+{% block title %}Sign In{% endblock %}
+
+<!-- Block for loading extra content, I.e. page specific css or javascript -->
+{% block extra %}
+<link rel="stylesheet" href="{% static 'dash/css/login.css' %}">
+
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+{% endblock %}
+
+{% block content %}
+
+
+<div class="wrapper fadeInDown">
+    <div id="formContent">
+        <!-- Tabs Titles -->
+
+        <!-- Icon -->
+        <div class="fadeIn first">
+        </div>
+
+        <!-- Login Form -->
+        <!-- Include the url for the login of the app -->
+        <form action="{% url 'health:login' %}" method="post">
+            <!-- Include error incase one occurs -->
+            {% include 'error.html' %}
+            <!-- Create a token for the form -->
+            {% csrf_token %}
+            <legend>Sign In</legend>
+            <input type="text" id="login" class="form-control" name="email" placeholder="Email" required autofocus>
+            <input type="password" class="form-control" name="password" placeholder="Password" required>
+            <label class="checkbox">
+                <input class="checkbox" type="checkbox" name="remember" checked />&nbsp;Remember Me
+            </label>
+            <button class="btn btn-primary" type="submit">Sign In</button>
+        </form>
+
+    </div>
+</div>
+{% endblock %}

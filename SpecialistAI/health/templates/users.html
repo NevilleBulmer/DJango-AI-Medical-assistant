@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+<!-- Sets the title for the page -->
+{% block title %}Users in {{ user.hospital.name }}{% endblock %}
+
+<!-- Loads the content into the content block -->
+{% block content %}
+    <!-- Loads the hospital the user is currently in -->
+    <h2 class="text-center">Users in {{ user.hospital.name }}</h2>
+    <!-- Include the url for signup as a link -->
+    <a href="{% url 'health:signup' %}" class="btn btn-primary"><i class="fa fa-user-plus"></i>&nbsp;Add User</a>
+    <h4>Doctors</h4>
+<ul class="list-group">
+    <!-- For loop to iterate through the users in doctor -->
+    {% for user in doctors %}
+        <!-- Provide a link/url for the medical informaiton of the user along with there primary key, I.e. id -->
+        <a href="{% url 'health:medical_information' user.pk %}"  class="list-group-item">
+            <!-- Display there full name -->
+            {{ user.get_full_name }}<br />
+        </a>
+    {% endfor %}
+</ul>
+    <h4>Nurses</h4>
+<ul class="list-group">
+    <!-- For loop to iterate through the users in nurse -->
+    {% for user in nurses %}
+        <!-- Provide a link/url for the medical informaiton of the user along with there primary key, I.e. id -->
+        <a href="{% url 'health:medical_information' user.pk %}"  class="list-group-item">
+            <!-- Display there full name -->
+            {{ user.get_full_name }}
+        </a>
+    {% endfor %}
+</ul>
+    <h4>Patients</h4>
+<ul class="list-group">
+    <!-- For loop to iterate through the users in patient -->
+    {% for user in patients %}
+        <!-- Provide a link/url for the medical informaiton of the user along with there primary key, I.e. id -->
+        <a href="{% url 'health:medical_information' user.pk %}"  class="list-group-item">
+            <!-- Display there full name -->
+            {{ user.get_full_name }}
+        </a>
+    {% endfor %}
+</ul>
+{% endblock %}

@@ -1,0 +1,224 @@
+{% extends 'base.html' %}
+<!-- Loads the title for the page -->
+{% block title %}Prescriptions{% endblock %}
+
+<!-- Load all main content into the content block -->
+{% block content %}
+<div class="nav-md">
+    <div class="container body">
+        <div class="main_container">
+            <div class="col-md-3 left_col">
+                <div class="left_col scroll-view">
+                    <div class="navbar nav_title" style="border: 0;">
+                        <a href="index.html" class="site_title">
+                            <span>Specialist AI</span></a>
+                    </div>
+
+                    <div class="clearfix"></div>
+
+                    <!-- menu profile quick info -->
+                    <div class="profile clearfix">
+                        <div class="profile_info">
+                            <span></span>
+
+                            <!-- Implement account checks -->
+                            <!-- If the user is a patient -->
+                            {% if user.is_patient %}
+                                Patient {% include 'user_link.html' %}
+                            {% endif %}
+                            <!-- If the user is a doctor -->
+                            {% if user.is_doctor %}
+                                Dr {% include 'user_link.html' %}
+                            {% endif %}
+                            <!-- If the user is a nurse -->
+                            {% if user.is_nurse %}
+                                Nurse {% include 'user_link.html' %}
+                            {% endif %}
+                            <!-- If the user is a admin -->
+                            {% if user.is_superuser %}
+                                Admin {% include 'user_link.html' %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <!-- /menu profile quick info -->
+
+                    <br />
+
+                    <!-- sidebar menu -->
+                    <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+                        <div class="menu_section">
+                            <h3>General</h3>
+                            <ul class="nav side-menu">
+                                {% include 'navbar.html' %}
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- /sidebar menu -->
+
+                    <!-- /menu footer buttons -->
+                    <div class="sidebar-footer hidden-small">
+                        <a data-toggle="tooltip" data-placement="top" title="Settings">
+                            <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                        </a>
+                        <a data-toggle="tooltip" data-placement="top" title="Profile">
+                            <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                        </a>
+                        <a data-toggle="tooltip" data-placement="top" title="Lock">
+                            <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+                        </a>
+                        <a data-toggle="tooltip" data-placement="top" title="Logout" href="{% url 'health:logout' %}">
+                            <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+                        </a>
+                    </div>
+                    <!-- /menu footer buttons -->
+                </div>
+            </div>
+
+            <!-- top navigation -->
+            <div class="top_nav">
+                <div class="nav_menu">
+                    
+                    <nav class="nav navbar-nav">
+                        <ul class=" navbar-right">
+                            <li class="nav-item dropdown open" style="padding-left: 15px;">
+                                <a href="javascript:;" class="user-profile dropdown-toggle" aria-haspopup="true"
+                                    id="navbarDropdown" data-toggle="dropdown" aria-expanded="false">
+                                    
+                                    
+                                </a>
+                                <div class="dropdown-menu dropdown-usermenu pull-right"
+                                    aria-labelledby="navbarDropdown">
+                                    
+                                    <a class="dropdown-item" href="{% url 'health:logout' %}">
+                                        <i class="fa fa-sign-out pull-right"></i>Log Out</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <!-- /top navigation -->
+
+            <!-- page content -->
+            <div class="right_col" role="main" style="min-height: 912px;">
+                <!-- {% if user.is_doctor %} -->
+                <div class="row">
+                    <div class="col-md-12 col-sm-12">
+                        <div class="x_panel">
+                            <div class="x_title">
+                                <h2>Current Patients<small>records</small></h2>
+                                <ul class="nav navbar-right panel_toolbox">
+                                    <li>
+                                        <a class="collapse-link">
+                                            <i class="fa fa-chevron-up"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="x_content">
+                                <div class="row">
+                                    <!-- Include url error incase one occurs -->
+                                    {% include 'error.html' %}
+                                    <!-- If there are active patients -->
+                                    {% if user.active_patients %}
+                                    <div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true" data-backdrop="false">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                            </div>
+                                        </div>
+                                    </div>
+                                        <div class="table-responsive">
+                                            <!-- Check to see if the logged in user can add a prescription -->
+                                            {% if logged_in_user.can_add_prescription %}
+                                                <!-- Include the add prescription for adding a new prescription -->
+                                                <button class="btn btn-primary" data-toggle="modal" data-target="#edit" data-remote="{% url 'health:add_prescription' %}">Add a Prescription</button>
+                                                <hr />
+                                                <!-- For loop to iterate through all active patients -->
+                                                {% for user in user.active_patients %}
+                                                    <!-- If the patient has a prescription alread -->
+                                                    {% if user.active_prescriptions %}
+                                                        <table class="table table-bordered table-striped">
+                                                            <legend>Prescriptions for {% include 'user_link.html' %}</legend>
+                                                            <thead>
+                                                            <tr>
+                                                                <th>Dosage</th>
+                                                                <th>Name</th>
+                                                                <th>Directions</th>
+                                                                <!-- 
+                                                                    If the logged in user can add a prescription 
+                                                                    display edit and delete buttons
+                                                                -->
+                                                                {% if logged_in_user.can_add_prescription %}
+                                                                    <th>Edit</th>
+                                                                    <th>Delete</th>
+                                                                {% endif %}
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            <!-- For loop to iterate through all prescriptions for active users -->
+                                                            {% for prescription in user.active_prescriptions %}
+                                                                <tr>
+                                                                    <!-- Display the dosage -->
+                                                                    <td>{{ prescription.dosage }}</td>
+                                                                    <!-- Display the name -->
+                                                                    <td>{{ prescription.name }}</td>
+                                                                    <!-- Display the directions -->
+                                                                    <td>{{ prescription.directions }}</td>
+                                                                    <!-- 
+                                                                        If the logged in user can add prescriptions
+                                                                        display an edit and delete button
+                                                                     -->
+                                                                    {% if logged_in_user.can_add_prescription %}
+                                                                        <td><p title="Edit"><button class="btn btn-primary btn-xs" data-title="Edit" data-remote="{% url 'health:edit_prescription' prescription.pk %}" data-toggle="modal" data-target="#edit"><span class="glyphicon glyphicon-pencil"></span></button></p></td>
+                                                                        <td><p title="Delete"><a class="btn btn-danger btn-xs" data-title="Delete" href="{% url 'health:delete_prescription' prescription.pk %}"><span class="glyphicon glyphicon-trash"></span></a></p></td>
+                                                                    {% endif %}
+
+                                                                </tr>
+                                                            {% endfor %}
+                                                            </tbody>
+                                                        </table>
+                                                    {% else %}
+                                                        <div class="text-center">
+                                                            <!-- Display thatuser ? does not have anmy prescriptions at this time -->
+                                                            <h2> No prescriptions for {% include 'user_link.html' %}</h2>
+                                                        </div>
+                                                    {% endif %}
+                                                    <hr />
+                                                {% endfor %}
+                                            {% endif %}
+                                        </div>
+                                    {% else %}
+                                        <!-- Display no patients in hospital -->
+                                        <h2 class="text-center"> No active patients in hospital. </h2>
+                                    {% endif %}
+                                    <script>
+                                        // Remove the data from the modal when it's closed.
+                                        $(document).on('hidden.bs.modal', function (e) {
+                                            $(e.target).removeData('bs.modal');
+                                        });
+                                    </script> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- {% endif %} -->
+
+            </div>
+            <!-- /page content -->
+
+            <!-- footer content -->
+            <footer>
+                <div class="pull-right">
+                    Created by <a href="http://www.neville-bulmer.com/">Neville Bulmer</a> with the help of bootstrap
+                </div>
+                <div class="clearfix"></div>
+            </footer>
+            <!-- /footer content -->
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

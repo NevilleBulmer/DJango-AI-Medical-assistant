@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+<!-- Load ststic files -->
+{% load staticfiles %}
+
+<!-- Sets the title -->
+{% block title %}Sign Up{% endblock %}
+<!-- Sets the legend -->
+{% block legend %}Sign Up{% endblock %}
+
+<!-- Loads extra, I.e. class specific css -->
+{% block extra %}
+    <link rel="stylesheet" href="{% static 'signup.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="nav-md">
+    <div class="container body">
+        <div class="main_container">
+            <div class="col-md-3 left_col">
+                <div class="left_col scroll-view">
+                    <div class="navbar nav_title" style="border: 0;">
+                        <a href="index.html" class="site_title">
+                            <span>Specialist AI</span></a>
+                    </div>
+
+                    <div class="clearfix"></div>
+
+                    <!-- menu profile quick info -->
+                    <div class="profile clearfix">
+                        <div class="profile_info">
+                            <span></span>
+
+                            <!-- Implement account checks -->
+                            <!-- If the user is a patient -->
+                            {% if user.is_patient %}
+                                Patient {% include 'user_link.html' %}
+                            {% endif %}
+                            <!-- If the user is a doctor -->
+                            {% if user.is_doctor %}
+                                Dr {% include 'user_link.html' %}
+                            {% endif %}
+                            <!-- If the user is a nurse -->
+                            {% if user.is_nurse %}
+                                Nurse {% include 'user_link.html' %}
+                            {% endif %}
+                            <!-- If the user is a admin -->
+                            {% if user.is_superuser %}
+                                Admin {% include 'user_link.html' %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <!-- /menu profile quick info -->
+
+                    <br />
+
+                    <!-- sidebar menu -->
+                    <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+                        <div class="menu_section">
+                            <h3>General</h3>
+                            <ul class="nav side-menu">
+                                <!-- Include the navbar -->
+                                {% include 'navbar.html' %}
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- /sidebar menu -->
+
+                    <!-- /menu footer buttons -->
+                    <div class="sidebar-footer hidden-small">
+                        <a data-toggle="tooltip" data-placement="top" title="Settings">
+                            <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                        </a>
+                        <a data-toggle="tooltip" data-placement="top" title="Profile">
+                            <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                        </a>
+                        <a data-toggle="tooltip" data-placement="top" title="Lock">
+                            <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+                        </a>
+                        <!-- Include the logout url for logging out -->
+                        <a data-toggle="tooltip" data-placement="top" title="Logout" href="{% url 'health:logout' %}">
+                            <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+                        </a>
+                    </div>
+                    <!-- /menu footer buttons -->
+                </div>
+            </div>
+
+            <!-- top navigation -->
+            <div class="top_nav">
+                <div class="nav_menu">
+                    
+                    <nav class="nav navbar-nav">
+                        <ul class=" navbar-right">
+                            <li class="nav-item dropdown open" style="padding-left: 15px;">
+                                <a href="javascript:;" class="user-profile dropdown-toggle" aria-haspopup="true"
+                                    id="navbarDropdown" data-toggle="dropdown" aria-expanded="false">
+                                    
+                                    
+                                </a>
+                                <div class="dropdown-menu dropdown-usermenu pull-right"
+                                    aria-labelledby="navbarDropdown">
+                                    <!-- Include the logout url for logging out -->
+                                    <a class="dropdown-item" href="{% url 'health:logout' %}">
+                                        <i class="fa fa-sign-out pull-right"></i>Log Out</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <!-- /top navigation -->
+
+            <!-- page content -->
+            <div class="right_col" role="main" style="min-height: 912px;">
+                <!-- If the user is either a doctor or an an admin -->
+                {% if user.is_doctor or user.is_admin %}
+                <div class="row">
+                    <!-- Include the url for the edit user page -->
+                    {% include 'edit_user.html' %}
+                </div>
+                    
+                </div>
+                {% endif %}
+            </div>
+            <!-- /page content -->
+
+            <!-- footer content -->
+            <footer>
+                <div class="pull-right">
+                    Created by <a href="http://www.neville-bulmer.com/">Neville Bulmer</a> with the help of bootstrap
+                </div>
+                <div class="clearfix"></div>
+            </footer>
+            <!-- /footer content -->
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+

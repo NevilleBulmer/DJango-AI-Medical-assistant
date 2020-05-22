@@ -1,0 +1,53 @@
+<!-- Class responsible for loading the navigation bar -->
+<!-- If the user is authenticated -->
+{% if user.is_authenticated %}
+    <!-- Checks if nabar if equal to home -->
+    <li class="{% ifequal navbar 'home'%}active{% endifequal %}">
+        <!-- Include and display the url for home -->
+        <a href="{% url 'health:home' %}">
+            <i class="fa fa-home"></i>&nbsp;Home
+        </a>
+    </li>
+    <!-- If the current user is a nurse or doctor -->
+    {% if user.is_nurse or user.is_doctor %}
+        <!-- Include and display the url for schedule -->
+        <li class="{% ifequal navbar 'schedule'%}active{% endifequal %}">
+            <a href="{% ifequal navbar 'schedule'%}#{% else %}{% url 'health:schedule' %}{% endifequal %}">
+                <i class="fa fa-calendar"></i>&nbsp;Schedule
+            </a>
+        </li>
+        
+    {% endif %}
+
+    <!-- If the current user is a patient, nurse or doctor -->
+    {% if not user.is_patient and user.is_nurse or user.is_doctor %}
+        <!-- Include and display the url for prescriptions -->
+        <li class="{% ifequal navbar 'prescriptions'%}active{% endifequal %}">
+            <a href="{% ifequal navbar 'prescriptions'%}#{% else %}{% url 'health:prescriptions' %}{% endifequal %}">
+                <i class="fa fa-medkit"></i>&nbsp;Prescriptions
+            </a>
+        </li>
+    {% endif %}
+
+    <!-- If the current user is a super user -->
+    {% if user.is_superuser %}
+        <!-- Include and display the url for medical information -->
+        <li class="{% ifequal navbar 'my_medical_information'%}active{% endifequal %}">
+            <a href="{% ifequal navbar 'my_medical_information'%}#{% else %}{% url 'health:my_medical_information' %}{% endifequal %}">
+                <i class="fa fa-heart"></i>&nbsp;Medical Information
+            </a>
+        </li>
+        <!-- Include and display the url for logs -->
+        <li class="{% ifequal navbar 'logs'%}active{% endifequal %}">
+            <a href="{% ifequal navbar 'logs'%}#{% else %}{% url 'health:logs' %}{% endifequal %}">
+                <i class="fa fa-list"></i>&nbsp;System
+            </a>
+        </li>
+        <!-- Include and display the url for users -->
+        <li class="{% ifequal navbar 'users'%}active{% endifequal %}">
+            <a href="{% ifequal navbar 'users'%}#{% else %}{% url 'health:users' %}{% endifequal %}">
+                <i class="fa fa-user"></i>&nbsp;Users
+            </a>
+        </li>
+    {% endif %}
+{% endif %}

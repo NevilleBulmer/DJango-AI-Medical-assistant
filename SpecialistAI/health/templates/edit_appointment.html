@@ -1,0 +1,68 @@
+<!-- 
+    Page responsible for editing an appointment
+ -->
+ <!-- If an appointment exists and was selected then laod edit, if not then load create new appointment. -->
+<form action="{% if appointment %}{% url 'health:edit_appointment' appointment.pk %}{% else %}{% url 'health:add_appointment' %}{% endif %}" method="post" accept-charset="utf-8" class="form" role="form">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="add-appointment">Add an Appointment</h4>
+    </div>
+    <div class="modal-body">
+        <!-- Create a token for the edit/add appointment form -->
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-xs-12 col-md-12">
+                <label>Time and Date</label>
+                <div class='input-group' id='datetimepicker'>
+                    <!-- Retrieves/sets the date for the appointment -->
+                    <input type='datetime-local' class="form-control" name="date" value="{{ appointment.date|date:"c"}}" />
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-xs-8 col-md-8">
+                <label>Duration</label>
+                <div class="input-group" id="duration">
+                    <!-- Retrieves/sets the duration for the appointment -->
+                    <input type="number" name="duration" class="form-control" value="{% if appointment %}{{ appointment.duration }}{% else %}30{% endif %}" />
+                    <span class="input-group-addon">minutes</span>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <!-- Retrieves/checks the account type for the user -->
+            {% if user.is_patient or user.is_superuser %}
+                <div class="col-xs-6 col-md-6">
+                    <label>Doctor</label>
+                    <select name="doctor" class="form-control">
+                        <!-- For loop to iterate through all doctors, For selecting the doctor for the appointment -->
+                        {% for doctor in doctors %}
+                            <!-- Retrieve the primary key and name for the selected doctor -->
+                            <option value="{{ doctor.pk }}">{{ doctor.get_full_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            {% endif %}
+            <!-- Retrieves/checks the account type for the user -->
+            {% if user.is_doctor or user.is_superuser %}
+                <div class="col-xs-6 col-md-6">
+                    <label>Patient</label>
+                    <select name="patient" class="form-control">
+                        <!-- For loop to iterate through all doctors, For selecting the patient for the appointment -->
+                        {% for patient in patients %}
+                            <!-- Retrieve the primary key and name for the selected patient -->
+                            <option value="{{ patient.pk }}">{{ patient.get_full_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button class="btn btn-primary" type="submit">Save</button>
+    </div>
+</form>
