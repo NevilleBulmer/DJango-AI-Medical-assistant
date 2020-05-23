@@ -11,7 +11,7 @@ chardet==3.0.4
 click==7.1.1
 cycler==0.10.0
 decorator==4.4.2
-Django==1.8.6
+Django==1.11.28
 docx2txt==0.8
 EbookLib==0.17.1
 extract-msg==0.23.1
