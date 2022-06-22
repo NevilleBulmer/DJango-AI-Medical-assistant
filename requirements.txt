@@ -39,7 +39,7 @@ matplotlib==3.2.1
 networkx==2.4
 nltk==3.5
 numba==0.48.0
-numpy==1.18.2
+numpy==1.22.0
 oauthlib==3.1.0
 olefile==0.46
 opencv-python==4.2.0.34
